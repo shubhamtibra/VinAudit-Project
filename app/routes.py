@@ -1,10 +1,11 @@
 from flask import Blueprint, request, jsonify
 from sqlalchemy import func
 from .models import db, VehicleListing
-
+from flask_cors import cross_origin
 main = Blueprint('main', __name__)
 
 @main.route('/api/search', methods=['POST'])
+@cross_origin()
 def search():
     data = request.json
     year = data.get('year')
@@ -23,7 +24,7 @@ def search():
     sample_listings = query.limit(100).all()
 
     result = {
-        "estimated_price": round(estimated_price, -2) if estimated_price else None,
+        "estimated_price": estimated_price,
         "sample_listings": [
             {
                 "year": v.year,
@@ -36,4 +37,5 @@ def search():
         ]
     }
 
-    return jsonify(result)
+    response = jsonify(result)
+    return response
