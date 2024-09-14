@@ -1,14 +1,11 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, render_template
 from flask_cors import cross_origin
 from app.price_estimator.estimated_price import EstimatePrice
 
 main = Blueprint('main', __name__)
-
-@main.route('/')
-@cross_origin()
-def home():
-    pass
-
+@main.route("/")
+def hello():
+    return render_template("index.html")
 @main.route('/api/search', methods=['POST'])
 @cross_origin()
 def search():
