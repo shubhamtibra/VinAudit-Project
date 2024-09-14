@@ -1,5 +1,7 @@
-from main import create_app, db
-from models import VehicleListing
+import sys
+print(sys.path)
+from app.main import create_app, db
+from app.models.models import VehicleListing
 from datetime import datetime
 
 class FileReader:

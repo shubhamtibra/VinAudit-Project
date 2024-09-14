@@ -1,8 +1,13 @@
 from flask import Blueprint, request, jsonify
-from sqlalchemy import func
-from .models import db, VehicleListing
 from flask_cors import cross_origin
+from app.price_estimator.estimated_price import EstimatePrice
+
 main = Blueprint('main', __name__)
+
+@main.route('/')
+@cross_origin()
+def home():
+    pass
 
 @main.route('/api/search', methods=['POST'])
 @cross_origin()
@@ -15,13 +20,10 @@ def search():
 
     if not all([year, make, model]):
         return jsonify({"error": "Year, make, and model are required"}), 400
-
-    query = VehicleListing.query.filter(VehicleListing.listing_price != None, VehicleListing.listing_mileage != None, VehicleListing.year==year, VehicleListing.make==make, VehicleListing.model==model)
-
-
-    estimated_price = db.session.query(func.avg(VehicleListing.listing_price)).filter_by(year=year, make=make, model=model).scalar()
-
-    sample_listings = query.limit(100).all()
+    
+    estimate = EstimatePrice(year, make, model, mileage)
+    estimated_price = estimate.get_price()
+    sample_listings = estimate.get_sample_listings()
 
     result = {
         "estimated_price": estimated_price,

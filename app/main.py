@@ -14,7 +14,7 @@ def create_app(load_data=False):
     db.init_app(app)
 
     if load_data == False:
-        from app.routes import main
+        from app.routes.routes import main
         app.register_blueprint(main)
     return app
 

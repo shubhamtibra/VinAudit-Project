@@ -9,6 +9,7 @@ psycopg2-binary = "*"
 flask = "*"
 flask-sqlalchemy = "*"
 flask-cors = "*"
+scikit-learn = "*"
 
 [dev-packages]
 
