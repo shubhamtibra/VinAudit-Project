@@ -18,11 +18,6 @@ def create_app(load_data=False):
         app.register_blueprint(main)
     return app
 
-# File: wsgi.py
-# from app import create_app
-
-# application = create_app()
-
 if __name__ == "__main__":
     application = create_app()
     application.run()
@@ -34,7 +29,7 @@ if __name__ == "__main__":
 # bind = "unix:/tmp/gunicorn.sock"
 # module = "wsgi:application"
 
-# # Nginx configuration (to be placed in /etc/nginx/sites-available/vinaudit)
+# # Nginx configuration
 # server {
 #     listen 80;
 #     server_name your_domain.com;
