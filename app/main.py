@@ -1,14 +1,14 @@
 from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
-
+import os
 
 db = SQLAlchemy()
 
 def create_app(load_data=False):
     app = Flask(__name__, static_url_path='', static_folder='react/build', template_folder='react/build')
     CORS(app)
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://shubham:123456789@localhost/vehicle_listings'
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DB_URL'] if "DB_URL" in os.environ else 'postgresql://shubham:123456789@localhost/vehicle_listings'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     db.init_app(app)
