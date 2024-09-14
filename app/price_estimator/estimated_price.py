@@ -20,7 +20,11 @@ class EstimatePrice:
             model = LinearRegression().fit(x, y)
             estimated_price = model.predict(np.array([int(self.mileage)]).reshape(-1, 1))[0]
         else:
-            estimated_price = self.query.with_entities(func.avg(VehicleListing.listing_price)).scalar()
+            all_listings = self.query.all()
+            new_cars_price = [listing.listing_price for listing in all_listings if listing.used == False]
+            uncertified_price = [listing.listing_price for listing in all_listings if listing.certified == False and listing.used == True]
+            certified_price = [listing.listing_price for listing in all_listings if listing.certified == True and listing.used == True]
+            estimated_price = np.mean([np.mean(new_cars_price), np.mean(uncertified_price), np.mean(certified_price)])
         return estimated_price
     def get_sample_listings(self):
         sample_listings = self.query.limit(100).all()
