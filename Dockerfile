@@ -1,0 +1,32 @@
+# Start your image with a node base image
+FROM node:18-alpine
+
+RUN apt-get install -y python3
+
+# The /app directory should act as the main application directory
+WORKDIR /app
+
+# Copy the app package and package-lock.json file
+# COPY app/react/package*.json ./
+# COPY app/Pipfile* /app/
+
+COPY ./app ./
+COPY ./Pipfile* ./
+
+
+
+# Copy local directories to the current local directory of our docker image (/app)
+# COPY app/react/src ./src
+# COPY app/react/public ./public
+
+
+# Install node packages, install serve, build the app, and remove dependencies at the end
+RUN npm install \
+    && npm install -g serve \
+    && npm run build \
+    && rm -fr node_modules
+
+EXPOSE 3000
+
+# Start the app using serve command
+CMD [ "serve", "-s", "build" ]
