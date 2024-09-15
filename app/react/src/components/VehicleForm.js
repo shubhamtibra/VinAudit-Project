@@ -12,7 +12,7 @@ function VehicleForm() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch('http://localhost:5000/api/search', {
+            const response = await fetch('/api/search', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
