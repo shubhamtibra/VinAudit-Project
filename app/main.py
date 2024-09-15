@@ -18,8 +18,8 @@ def create_app(load_data=False):
         app.register_blueprint(main)
     return app
 
+application = create_app()
 if __name__ == "__main__":
-    application = create_app()
     application.run()
     # Serve static react files
 

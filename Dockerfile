@@ -1,32 +1,16 @@
-# Start your image with a node base image
-FROM node:18-alpine
+# syntax=docker.io/docker/dockerfile:1.7-labs
+FROM node:18-alpine AS react-build-step
 
-RUN apt-get install -y python3
-
-# The /app directory should act as the main application directory
-WORKDIR /app
-
-# Copy the app package and package-lock.json file
-# COPY app/react/package*.json ./
-# COPY app/Pipfile* /app/
-
-COPY ./app ./
-COPY ./Pipfile* ./
-
-
-
-# Copy local directories to the current local directory of our docker image (/app)
-# COPY app/react/src ./src
-# COPY app/react/public ./public
-
-
-# Install node packages, install serve, build the app, and remove dependencies at the end
-RUN npm install \
-    && npm install -g serve \
+COPY --exclude=**/node_modules --exclude=**/build app/react/ app/react/
+RUN cd app/react && npm install \
     && npm run build \
     && rm -fr node_modules
 
-EXPOSE 3000
 
-# Start the app using serve command
-CMD [ "serve", "-s", "build" ]
+FROM python:3.10
+
+COPY --from=react-build-step /app/react/build app/react/build
+COPY --exclude=**/react . .
+RUN pip3 install pipenv && pipenv install
+EXPOSE 8080
+CMD ["pipenv", "run", "gunicorn", "--config", "gunicorn_config.py", "app.main:application"]
